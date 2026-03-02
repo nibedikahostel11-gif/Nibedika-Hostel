@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0D9488;
+  --color-primary-hover: #0F766E;
+  --color-accent: #FCD34D;
+  --color-accent-hover: #FBBF24;
+  --font-sans: "Hind Siliguri", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-bounce-slow: bounce 3s infinite;
+}
+
+body {
+  font-family: var(--font-sans);
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-teal-600 rounded-full hover:bg-teal-700;
+}
