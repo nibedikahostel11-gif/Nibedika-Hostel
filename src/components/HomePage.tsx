@@ -61,8 +61,8 @@ const HomePage: React.FC = () => {
         <Pricing />
         <Branches />
         <Gallery />
-        <Testimonials />
         <FAQ />
+        <Testimonials />
       </main>
       <Footer />
 
