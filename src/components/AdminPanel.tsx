@@ -78,6 +78,8 @@ const AdminPanel = () => {
   const [passwordMessage, setPasswordMessage] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
+  const [deleteConfirm, setDeleteConfirm] = useState<{type: 'package' | 'gallery', id: string} | null>(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -207,14 +209,8 @@ const AdminPanel = () => {
     }
   };
 
-  const deletePackage = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this package?')) {
-      try {
-        await deleteDoc(doc(db, 'packages', id));
-      } catch (error) {
-        handleFirestoreError(error, OperationType.DELETE, 'packages');
-      }
-    }
+  const deletePackage = (id: string) => {
+    setDeleteConfirm({ type: 'package', id });
   };
 
   const saveImage = async (e: React.FormEvent) => {
@@ -237,14 +233,22 @@ const AdminPanel = () => {
     }
   };
 
-  const deleteImage = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this image?')) {
-      try {
-        await deleteDoc(doc(db, 'gallery', id));
-      } catch (error) {
-        handleFirestoreError(error, OperationType.DELETE, 'gallery');
+  const deleteImage = (id: string) => {
+    setDeleteConfirm({ type: 'gallery', id });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return;
+    try {
+      if (deleteConfirm.type === 'package') {
+        await deleteDoc(doc(db, 'packages', deleteConfirm.id));
+      } else {
+        await deleteDoc(doc(db, 'gallery', deleteConfirm.id));
       }
+    } catch (error) {
+      handleFirestoreError(error, OperationType.DELETE, deleteConfirm.type === 'package' ? 'packages' : 'gallery');
     }
+    setDeleteConfirm(null);
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
@@ -328,6 +332,20 @@ const AdminPanel = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row pb-16 md:pb-0">
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl">
+            <h3 className="text-lg font-bold mb-4">Confirm Deletion</h3>
+            <p className="text-gray-600 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setDeleteConfirm(null)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition-colors">Cancel</button>
+              <button onClick={confirmDelete} className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded transition-colors">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Header */}
       <div className="md:hidden bg-gray-900 text-white p-4 text-center font-bold sticky top-0 z-40 shadow-md">
         Admin Panel
@@ -507,7 +525,7 @@ const AdminPanel = () => {
                   <div className="p-2">
                     <p className="text-sm truncate">{img.title || 'Untitled'}</p>
                   </div>
-                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-2 right-2 flex gap-1">
                     <button onClick={() => setImgForm({ id: img.id, imageUrl: img.imageUrl, title: img.title || '' })} className="bg-white p-1.5 rounded shadow text-blue-600 hover:text-blue-800">
                       <Edit2 size={14} />
                     </button>
