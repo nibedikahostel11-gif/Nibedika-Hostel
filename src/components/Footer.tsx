@@ -114,8 +114,10 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-gray-800 pt-6 md:pt-8 text-center">
-          <p className="text-gray-500 text-xs md:text-sm mb-1 md:mb-2">
-            © {new Date().getFullYear()} Nibedika Hostel. All rights reserved.
+          <p className="text-gray-500 text-xs md:text-sm mb-1 md:mb-2 flex items-center justify-center gap-2">
+            <span>© {new Date().getFullYear()} Nibedika Hostel. All rights reserved.</span>
+            <span className="text-gray-700">|</span>
+            <a href="/admin" className="hover:text-teal-400 transition-colors">Admin Panel</a>
           </p>
           <p className="text-gray-600 text-[10px] md:text-xs flex items-center justify-center gap-1">
             Created by{' '}

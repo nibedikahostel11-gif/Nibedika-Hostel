@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "Package": {
+      "title": "Package",
+      "description": "A hostel rent package",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Name of the package"
+        },
+        "price": {
+          "type": "string",
+          "description": "Price of the package"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of features included in the package"
+        },
+        "description": {
+          "type": "string",
+          "description": "Additional description"
+        },
+        "highlight": {
+          "type": "boolean",
+          "description": "Whether the package is highlighted"
+        },
+        "isDaily": {
+          "type": "boolean",
+          "description": "Whether the package is a daily package"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp of creation"
+        }
+      },
+      "required": ["title", "price", "features"]
+    },
+    "GalleryImage": {
+      "title": "Gallery Image",
+      "description": "An image in the gallery",
+      "type": "object",
+      "properties": {
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title or alt text for the image"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp of creation"
+        }
+      },
+      "required": ["imageUrl"]
+    }
+  },
+  "firestore": {
+    "packages": {
+      "schema": {
+        "$ref": "#/entities/Package"
+      },
+      "description": "Collection of hostel rent packages"
+    },
+    "gallery": {
+      "schema": {
+        "$ref": "#/entities/GalleryImage"
+      },
+      "description": "Collection of gallery images"
+    }
+  }
+}

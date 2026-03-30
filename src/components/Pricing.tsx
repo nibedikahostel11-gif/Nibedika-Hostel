@@ -1,80 +1,75 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckCircle2, Phone, Star } from 'lucide-react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 const Pricing: React.FC = () => {
-  const commonFeatures = [
-    "৩ বেলা স্বাস্থ্যকর খাবার",
-    "ফ্রি হাই-স্পিড ওয়াইফাই",
-    "২৪/৭ নিরাপত্তা ও সিসিটিভি",
-    "ফিল্টার পানির সুব্যবস্থা",
-    "জেনারেটর সুবিধা",
-    "টাইলসকৃত পরিষ্কার রুম",
-  ];
+  const [packages, setPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const allPackages = [
-    {
-      title: "৪ সিট (ইকোনমি)",
-      price: "৪,৬০০",
-      period: "/মাস",
-      features: [...commonFeatures, "বাজেট ফ্রেন্ডলি"],
-      highlight: false
-    },
-    {
-      title: "৪ সিট (স্পেশাল)",
-      price: "৫,১০০",
-      period: "/মাস",
-      features: [...commonFeatures, "উন্নত ভেন্টিলেশন"],
-      highlight: false
-    },
-    {
-      title: "৩ সিট (ইকোনমি)",
-      price: "৫,৬০০",
-      period: "/মাস",
-      features: [...commonFeatures, "পর্যাপ্ত আলো বাতাস"],
-      highlight: false
-    },
-    {
-      title: "৩ সিট (স্পেশাল)",
-      price: "৬,১০০",
-      period: "/মাস",
-      features: [...commonFeatures, "সেমি-প্রাইভেট"],
-      highlight: false
-    },
-    {
-      title: "২ সিট (ইকোনমি)",
-      price: "৬,৬০০",
-      period: "/মাস",
-      features: [...commonFeatures, "শান্তিপূর্ণ পরিবেশ"],
-      highlight: true
-    },
-    {
-      title: "২ সিট (স্পেশাল)",
-      price: "৭,১০০",
-      period: "/মাস",
-      features: [...commonFeatures, "প্রিমিয়াম ফিনিশিং"],
-      highlight: false
-    },
-    {
-      title: "সিঙ্গেল রুম (VIP)",
-      price: "৮,১০০",
-      period: "/মাস",
-      features: [...commonFeatures, "সম্পূর্ণ ব্যক্তিগত প্রাইভেসি"],
-      highlight: false
-    },
-    {
-      title: "ডেইলি গেস্ট",
-      price: "৩০০",
-      period: "/দিন",
-      features: [
-        "৩ বেলা খাবার আলোচনা সাপেক্ষে",
-        "স্বল্পমেয়াদী থাকার ব্যবস্থা",
-        "নিরাপদ পরিবেশ",
-        "ওয়াইফাই ও অন্যান্য সুবিধা",
-      ],
-      highlight: false,
-      isDaily: true
-    }
-  ];
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'packages'), (snapshot) => {
+      const pkgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Sort by createdAt if available
+      pkgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+      setPackages(pkgs);
+      setLoading(false);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'packages');
+    });
+    return () => unsubscribe();
+  }, []);
 
   const generateWhatsAppLink = (title: string, price: string) => {
     const message = `আসসালামু আলাইকুম, আমি "${title}" (${price} টাকা) প্যাকেজটি বুকিং দিতে চাই। বিস্তারিত জানাবেন প্লিজ?`;
@@ -101,60 +96,66 @@ const Pricing: React.FC = () => {
         </div>
 
         {/* Main Grid: 2 Columns on Mobile, 4 Columns on Desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6 md:mb-16 max-w-7xl mx-auto">
-          {allPackages.map((pkg, index) => (
-            <div 
-              key={index}
-              className={`bg-white rounded-md md:rounded-lg p-2 md:p-6 border flex flex-col h-full ${
-                pkg.highlight 
-                  ? 'border-teal-500 shadow-md relative' 
-                  : 'border-gray-200 shadow-sm relative'
-              }`}
-            >
-              {pkg.highlight && (
-                <div className="absolute top-0 right-0 bg-teal-600 text-white text-[8px] md:text-xs font-bold px-1.5 py-0.5 md:px-3 rounded-bl-md rounded-tr-md shadow-sm">
-                  জনপ্রিয়
-                </div>
-              )}
-              
-              <h4 className="text-[11px] md:text-lg font-bold text-gray-800 mb-0.5 md:mb-2 leading-tight">{pkg.title}</h4>
-              <div className="flex flex-wrap items-baseline mb-1.5 md:mb-4">
-                <span className={`text-sm md:text-2xl font-bold ${pkg.isDaily ? 'text-gray-800' : 'text-teal-600'}`}>
-                  ৳{pkg.price}
-                </span>
-                <span className="text-[8px] md:text-sm text-gray-500 font-medium ml-0.5">{pkg.period}</span>
-              </div>
-              
-              <div className="flex-grow">
-                <div className="h-px bg-gray-100 w-full mb-1.5 md:mb-4"></div>
-                <ul className="space-y-0.5 md:space-y-3 mb-2 md:mb-6">
-                  {pkg.features.map((feature: string, i: number) => (
-                    <li key={i} className="flex items-start gap-1 md:gap-2 text-[8px] md:text-sm text-gray-600">
-                      <CheckCircle2 className={`shrink-0 mt-0.5 w-2 h-2 md:w-4 md:h-4 ${pkg.isDaily ? 'text-yellow-500' : 'text-teal-500'}`} />
-                      <span className="leading-tight">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <a 
-                href={generateWhatsAppLink(pkg.title, pkg.price)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`w-full flex items-center justify-center gap-1 md:gap-2 py-1 md:py-2.5 rounded-md text-[9px] md:text-sm font-bold transition-colors mt-auto shadow-sm ${
-                   pkg.highlight
-                    ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900'
-                    : pkg.isDaily 
-                        ? 'bg-teal-600 hover:bg-teal-700 text-white'
-                        : 'bg-gray-800 hover:bg-gray-900 text-white'
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">Loading packages...</div>
+        ) : packages.length > 0 ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-6 mb-6 md:mb-16 max-w-7xl mx-auto">
+            {packages.map((pkg, index) => (
+              <div 
+                key={pkg.id || index}
+                className={`bg-white rounded-md md:rounded-lg p-2 md:p-6 border flex flex-col h-full ${
+                  pkg.highlight 
+                    ? 'border-teal-500 shadow-md relative' 
+                    : 'border-gray-200 shadow-sm relative'
                 }`}
               >
-                <Phone className="w-2 h-2 md:w-4 md:h-4" />
-                Book Now
-              </a>
-            </div>
-          ))}
-        </div>
+                {pkg.highlight && (
+                  <div className="absolute top-0 right-0 bg-teal-600 text-white text-[8px] md:text-xs font-bold px-1.5 py-0.5 md:px-3 rounded-bl-md rounded-tr-md shadow-sm">
+                    জনপ্রিয়
+                  </div>
+                )}
+                
+                <h4 className="text-[11px] md:text-lg font-bold text-gray-800 mb-0.5 md:mb-2 leading-tight">{pkg.title}</h4>
+                <div className="flex flex-wrap items-baseline mb-1.5 md:mb-4">
+                  <span className={`text-sm md:text-2xl font-bold ${pkg.isDaily ? 'text-gray-800' : 'text-teal-600'}`}>
+                    ৳{pkg.price}
+                  </span>
+                  <span className="text-[8px] md:text-sm text-gray-500 font-medium ml-0.5">{pkg.period || '/মাস'}</span>
+                </div>
+                
+                <div className="flex-grow">
+                  <div className="h-px bg-gray-100 w-full mb-1.5 md:mb-4"></div>
+                  <ul className="space-y-0.5 md:space-y-3 mb-2 md:mb-6">
+                    {pkg.features && pkg.features.map((feature: string, i: number) => (
+                      <li key={i} className="flex items-start gap-1 md:gap-2 text-[8px] md:text-sm text-gray-600">
+                        <CheckCircle2 className={`shrink-0 mt-0.5 w-2 h-2 md:w-4 md:h-4 ${pkg.isDaily ? 'text-yellow-500' : 'text-teal-500'}`} />
+                        <span className="leading-tight">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <a 
+                  href={generateWhatsAppLink(pkg.title, pkg.price)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-full flex items-center justify-center gap-1 md:gap-2 py-1 md:py-2.5 rounded-md text-[9px] md:text-sm font-bold transition-colors mt-auto shadow-sm ${
+                     pkg.highlight
+                      ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900'
+                      : pkg.isDaily 
+                          ? 'bg-teal-600 hover:bg-teal-700 text-white'
+                          : 'bg-gray-800 hover:bg-gray-900 text-white'
+                  }`}
+                >
+                  <Phone className="w-2 h-2 md:w-4 md:h-4" />
+                  Book Now
+                </a>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-gray-500">No packages available at the moment.</div>
+        )}
 
         {/* Guardian Package Section */}
         <div className="max-w-4xl mx-auto">

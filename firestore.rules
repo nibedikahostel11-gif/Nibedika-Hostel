@@ -1,0 +1,91 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: packages
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, max 100 chars)
+    //   - price: string (required, max 50 chars)
+    //   - features: list of strings (required, max 20 items, max 100 chars each)
+    //   - description: string (optional, max 500 chars)
+    //   - createdAt: number (optional)
+    //
+    // Collection: gallery
+    // Document ID: auto-generated
+    // Fields:
+    //   - imageUrl: string (required, max 500 chars, valid URL)
+    //   - title: string (optional, max 100 chars)
+    //   - createdAt: number (optional)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.email == "nibedikahostel11@gmail.com" && request.auth.token.email_verified == true;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    function isValidPackage() {
+      let data = request.resource.data;
+      return hasRequiredFields(['title', 'price', 'features']) &&
+             hasOnlyAllowedFields(['title', 'price', 'features', 'description', 'createdAt', 'highlight', 'isDaily']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 100 &&
+             data.price is string && data.price.size() > 0 && data.price.size() <= 50 &&
+             data.features is list && data.features.size() <= 20 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 500)) &&
+             (!('highlight' in data) || data.highlight is bool) &&
+             (!('isDaily' in data) || data.isDaily is bool) &&
+             (!('createdAt' in data) || data.createdAt is number);
+    }
+
+    function isValidGalleryImage() {
+      let data = request.resource.data;
+      return hasRequiredFields(['imageUrl']) &&
+             hasOnlyAllowedFields(['imageUrl', 'title', 'createdAt']) &&
+             data.imageUrl is string && data.imageUrl.size() > 0 && data.imageUrl.size() <= 500 && isValidUrl(data.imageUrl) &&
+             (!('title' in data) || (data.title is string && data.title.size() <= 100)) &&
+             (!('createdAt' in data) || data.createdAt is number);
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /packages/{packageId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidPackage();
+      allow update: if isAdmin() && isValidPackage();
+      allow delete: if isAdmin();
+    }
+
+    match /gallery/{imageId} {
+      allow read: if true;
+      allow create: if isAdmin() && isValidGalleryImage();
+      allow update: if isAdmin() && isValidGalleryImage();
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, ShieldCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,6 +99,13 @@ const Header: React.FC = () => {
                     {link.name}
                   </a>
                 ))}
+                <Link
+                  to="/admin"
+                  className="text-gray-700 hover:text-teal-600 px-2 py-2 text-sm font-medium transition-colors flex items-center gap-1"
+                >
+                  <ShieldCheck size={16} />
+                  Admin Panel
+                </Link>
               </nav>
               <a 
                 href="tel:01345200218" 
@@ -176,6 +184,14 @@ const Header: React.FC = () => {
                   {link.name}
                 </a>
               ))}
+              <Link
+                to="/admin"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 text-gray-700 hover:text-teal-600 px-2 py-3 text-base font-medium transition-colors border-b border-gray-100 last:border-0"
+              >
+                <ShieldCheck size={18} />
+                Admin Panel
+              </Link>
             </div>
           </div>
         </div>
