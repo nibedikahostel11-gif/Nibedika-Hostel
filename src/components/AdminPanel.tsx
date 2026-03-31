@@ -215,8 +215,22 @@ const AdminPanel = () => {
 
   const saveImage = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Format Google Drive URLs to direct image URLs
+    let formattedUrl = imgForm.imageUrl;
+    if (formattedUrl.includes('drive.google.com')) {
+      const fileMatch = formattedUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      const idMatch = formattedUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      
+      if (fileMatch && fileMatch[1]) {
+        formattedUrl = `https://lh3.googleusercontent.com/d/${fileMatch[1]}`;
+      } else if (idMatch && idMatch[1]) {
+        formattedUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}`;
+      }
+    }
+
     const imgData = {
-      imageUrl: imgForm.imageUrl,
+      imageUrl: formattedUrl,
       title: imgForm.title,
       createdAt: Date.now()
     };
@@ -521,7 +535,7 @@ const AdminPanel = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.map(img => (
                 <div key={img.id} className="bg-white rounded-lg shadow-sm overflow-hidden border relative group">
-                  <img src={img.imageUrl} alt={img.title || 'Gallery image'} className="w-full h-32 object-cover" />
+                  <img src={img.imageUrl} alt={img.title || 'Gallery image'} className="w-full h-32 object-cover" referrerPolicy="no-referrer" />
                   <div className="p-2">
                     <p className="text-sm truncate">{img.title || 'Untitled'}</p>
                   </div>
