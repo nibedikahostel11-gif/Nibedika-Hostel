@@ -169,11 +169,11 @@ const Branches: React.FC = () => {
 
           <div className="mt-4 md:mt-5 flex justify-center">
              <a 
-                href="tel:01332719549" 
+                href="tel:01750523734" 
                 className="inline-flex items-center gap-1.5 md:gap-2 bg-yellow-400 text-gray-900 px-4 py-2 md:px-5 md:py-2.5 rounded-md font-bold shadow-sm hover:bg-yellow-500 transition-colors border border-yellow-400 text-xs md:text-sm"
               >
                 <Phone size={14} className="fill-current md:w-[18px] md:h-[18px]" />
-                স্টাফ: 01332-719549
+                স্টাফ: 01750523734
              </a>
           </div>
         </div>
