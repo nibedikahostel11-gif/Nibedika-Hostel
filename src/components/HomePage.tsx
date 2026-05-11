@@ -6,10 +6,25 @@ import Amenities from './Amenities';
 import Pricing from './Pricing';
 import Branches from './Branches';
 import Gallery from './Gallery';
+import Features from './Features';
+import Rules from './Rules';
 import Testimonials from './Testimonials';
 import FAQ from './FAQ';
 import Footer from './Footer';
 import { ArrowUp } from 'lucide-react';
+
+const ScrollReveal = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 const HomePage: React.FC = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -23,6 +38,26 @@ const HomePage: React.FC = () => {
       history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
+  }, []);
+
+  // Auto scroll hint on load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Check if user has already scrolled manually
+      if (window.scrollY === 0) {
+        // Scroll down slightly to hint there is content below
+        window.scrollBy({ top: 400, behavior: 'smooth' });
+        
+        // Scroll back up
+        setTimeout(() => {
+          if (window.scrollY > 0) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }, 1200);
+      }
+    }, 3000); // 3 seconds after load
+    
+    return () => clearTimeout(timer);
   }, []);
 
   // Handle Scroll to toggle Top Button visibility
@@ -57,12 +92,14 @@ const HomePage: React.FC = () => {
       <Header />
       <main>
         <Hero />
-        <Amenities />
-        <Pricing />
-        <Branches />
-        <Gallery />
-        <FAQ />
-        <Testimonials />
+        <ScrollReveal><Amenities /></ScrollReveal>
+        <ScrollReveal><Pricing /></ScrollReveal>
+        <ScrollReveal><Branches /></ScrollReveal>
+        <ScrollReveal><Gallery /></ScrollReveal>
+        <Features />
+        <ScrollReveal><Rules /></ScrollReveal>
+        <ScrollReveal><FAQ /></ScrollReveal>
+        <ScrollReveal><Testimonials /></ScrollReveal>
       </main>
       <Footer />
 

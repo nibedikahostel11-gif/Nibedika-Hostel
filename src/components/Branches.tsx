@@ -90,6 +90,18 @@ const BranchCard: React.FC<{ branch: Branch; onImageClick: (img: string) => void
 
 const Branches: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<'female' | 'male'>('female');
+  
+  React.useEffect(() => {
+    const handleSwitchTab = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail && (customEvent.detail === 'female' || customEvent.detail === 'male')) {
+        setSelectedType(customEvent.detail);
+      }
+    };
+    window.addEventListener('switch-branches-tab', handleSwitchTab);
+    return () => window.removeEventListener('switch-branches-tab', handleSwitchTab);
+  }, []);
   
   const femaleBranches: Branch[] = [
     {
@@ -118,7 +130,7 @@ const Branches: React.FC = () => {
       name: 'কাঠালবাগান ব্রাঞ্চ - ১',
       address: '11/8/C কাঠালবাগান ফ্রি স্কুল স্ট্রিট।\n(বসুন্ধরা শপিং সেন্টারের বিপরীত পাশে)',
       image: 'https://drive.google.com/thumbnail?id=15NJpXwJRPvbv_uyVbVhSlSFB6gbMBArx&sz=w800',
-      mapLink: 'https://maps.app.goo.gl/vyqzE75LezdXRK6Q8'
+      mapLink: 'https://maps.app.goo.gl/xqBtrEdyYzW6BdMZ7'
     },
     {
       name: 'পান্থপথ/ধানমন্ডি ব্রাঞ্চ',
@@ -128,7 +140,7 @@ const Branches: React.FC = () => {
     },
     {
       name: 'কাঠালবাগান ব্রাঞ্চ - ২',
-      address: '88 কাঞ্চন টাওয়ার, কাঠালবাগান কাঁচা বাজার।',
+      address: '88 কাঞ্চন টাওয়ার, কাঠালবাগান কাঁচা বাজার, গ্রীন রোড,গ্রীন লাইন হসপিটাল সংলগ্ন।',
       image: 'https://drive.google.com/thumbnail?id=1eXjycyN7Zs9wiBmuyp-gV7E8Jxplblbg&sz=w800',
       mapLink: 'https://maps.app.goo.gl/bYTpkU9bMnQ3Hp1C6'
     },
@@ -160,14 +172,13 @@ const Branches: React.FC = () => {
 
       <div className="container mx-auto px-4">
         <div className="text-center mb-6 md:mb-10">
-          <h2 className="text-lg md:text-3xl font-bold text-gray-900 mb-1 md:mb-3">আমাদের ব্রাঞ্চসমূহ</h2>
+          <h2 className="text-lg md:text-3xl font-bold text-gray-900 mb-1 md:mb-3">আমাদের লোকেশন</h2>
           <div className="w-12 md:w-24 h-1 bg-yellow-400 mx-auto rounded-full"></div>
           
           <p className="mt-2 md:mt-3 text-gray-600 text-[10px] md:text-sm font-medium max-w-2xl mx-auto">
             ঢাকার যাতায়াত সুবিধাসম্পন্ন প্রাইম লোকেশনগুলোতে আমাদের সুসজ্জিত ব্রাঞ্চসমূহ।
           </p>
-
-          <div className="mt-4 md:mt-5 flex justify-center">
+          <div className="mt-4 md:mt-5 flex flex-col items-center gap-2">
              <a 
                 href="tel:01750523734" 
                 className="inline-flex items-center gap-1.5 md:gap-2 bg-yellow-400 text-gray-900 px-4 py-2 md:px-5 md:py-2.5 rounded-md font-bold shadow-sm hover:bg-yellow-500 transition-colors border border-yellow-400 text-xs md:text-sm"
@@ -175,62 +186,98 @@ const Branches: React.FC = () => {
                 <Phone size={14} className="fill-current md:w-[18px] md:h-[18px]" />
                 স্টাফ: 01750523734
              </a>
+             <p className="text-teal-600 text-[11px] md:text-base font-bold text-center">
+               ছেলে এবং মেয়েদের জন্য আলাদা আলাদা বিল্ডিং
+             </p>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-8 md:space-y-12">
+        {/* Selection Tabs/Buttons */}
+        <div className="max-w-md mx-auto flex gap-2 md:gap-4 mb-6 md:mb-8">
+          <button 
+            onClick={() => setSelectedType('female')}
+            className={`flex-1 px-4 py-2 md:px-6 md:py-3 rounded-full border transition-all flex flex-row items-center justify-center gap-2 ${selectedType === 'female' ? 'border-teal-500 bg-teal-50 ring-2 ring-teal-500/20' : 'border-gray-200 bg-white hover:border-teal-200 hover:bg-gray-50'}`}
+          >
+            <div className={`p-1.5 md:p-2 rounded-full ${selectedType === 'female' ? 'bg-teal-600 text-white' : 'bg-teal-100 text-teal-600'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-5 md:h-5">
+                <circle cx="12" cy="7" r="4" />
+                <path d="M12 11 L7 21 H17 Z" />
+              </svg>
+            </div>
+            <span className={`text-sm md:text-base font-bold ${selectedType === 'female' ? 'text-teal-700' : 'text-gray-700'}`}>মহিলা হোস্টেল</span>
+          </button>
+
+          <button 
+            onClick={() => setSelectedType('male')}
+            className={`flex-1 px-4 py-2 md:px-6 md:py-3 rounded-full border transition-all flex flex-row items-center justify-center gap-2 ${selectedType === 'male' ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-500/20' : 'border-gray-200 bg-white hover:border-indigo-200 hover:bg-gray-50'}`}
+          >
+            <div className={`p-1.5 md:p-2 rounded-full ${selectedType === 'male' ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-600'}`}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-5 md:h-5">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <span className={`text-sm md:text-base font-bold ${selectedType === 'male' ? 'text-indigo-700' : 'text-gray-700'}`}>পুরুষ হোস্টেল</span>
+          </button>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
           
           {/* Female Branches Section */}
-          <div className="relative">
-            {/* Header Badge */}
-            <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-teal-600 text-white px-4 py-1 md:px-6 md:py-1.5 rounded-md font-bold shadow-sm z-10 whitespace-nowrap text-[10px] md:text-sm">
-              মহিলা হোস্টেল
-            </div>
-            
-            <div className="border border-teal-100 bg-teal-50/20 rounded-md md:rounded-lg p-2 md:p-6 pt-6 md:pt-8">
-              <div className="flex justify-center mb-4 md:mb-5 mt-1">
-                 <a 
-                    href="tel:01714063178" 
-                    className="inline-flex items-center gap-1.5 md:gap-2 bg-white text-teal-700 px-3 py-1 md:px-4 md:py-1.5 rounded-md font-bold shadow-sm border border-teal-200 hover:bg-teal-50 transition-colors text-[10px] md:text-sm"
-                  >
-                    <Phone size={12} className="fill-current md:w-[14px] md:h-[14px]" />
-                    ইনচার্জ: 01714-063178
-                 </a>
+          {selectedType === 'female' && (
+            <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Header Badge */}
+              <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-teal-600 text-white px-4 py-1 md:px-6 md:py-1.5 rounded-md font-bold shadow-sm z-10 whitespace-nowrap text-[10px] md:text-sm">
+                মহিলা হোস্টেল ব্রাঞ্চসমূহ
               </div>
+              
+              <div className="border border-teal-100 bg-teal-50/20 rounded-md md:rounded-lg p-2 md:p-6 pt-6 md:pt-8">
+                <div className="flex justify-center mb-4 md:mb-5 mt-1">
+                   <a 
+                      href="tel:01714063178" 
+                      className="inline-flex items-center gap-1.5 md:gap-2 bg-white text-teal-700 px-3 py-1 md:px-4 md:py-1.5 rounded-md font-bold shadow-sm border border-teal-200 hover:bg-teal-50 transition-colors text-[10px] md:text-sm"
+                    >
+                      <Phone size={12} className="fill-current md:w-[14px] md:h-[14px]" />
+                      ইনচার্জ: 01714-063178
+                   </a>
+                </div>
 
-              <div className="grid grid-cols-1 gap-2 md:gap-5">
-                {femaleBranches.map((branch, index) => (
-                  <BranchCard key={index} branch={branch} onImageClick={setSelectedImage} />
-                ))}
+                <div className="grid grid-cols-1 gap-2 md:gap-5">
+                  {femaleBranches.map((branch, index) => (
+                    <BranchCard key={index} branch={branch} onImageClick={setSelectedImage} />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           {/* Male Branches Section */}
-          <div className="relative">
-            {/* Header Badge */}
-            <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-1 md:px-6 md:py-1.5 rounded-md font-bold shadow-sm z-10 whitespace-nowrap text-[10px] md:text-sm">
-              পুরুষ হোস্টেল
-            </div>
-
-            <div className="border border-gray-200 bg-gray-50 rounded-md md:rounded-lg p-2 md:p-6 pt-6 md:pt-8">
-              <div className="flex justify-center mb-4 md:mb-5 mt-1">
-                 <a 
-                    href="tel:01714063032" 
-                    className="inline-flex items-center gap-1.5 md:gap-2 bg-white text-gray-800 px-3 py-1 md:px-4 md:py-1.5 rounded-md font-bold shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors text-[10px] md:text-sm"
-                  >
-                    <Phone size={12} className="fill-current md:w-[14px] md:h-[14px]" />
-                    ইনচার্জ: 01714-063032
-                 </a>
+          {selectedType === 'male' && (
+            <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {/* Header Badge */}
+              <div className="absolute -top-3 md:-top-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-1 md:px-6 md:py-1.5 rounded-md font-bold shadow-sm z-10 whitespace-nowrap text-[10px] md:text-sm">
+                পুরুষ হোস্টেল ব্রাঞ্চসমূহ
               </div>
 
-              <div className="grid grid-cols-1 gap-2 md:gap-5">
-                {maleBranches.map((branch, index) => (
-                  <BranchCard key={index} branch={branch} onImageClick={setSelectedImage} />
-                ))}
+              <div className="border border-gray-200 bg-gray-50 rounded-md md:rounded-lg p-2 md:p-6 pt-6 md:pt-8">
+                <div className="flex justify-center mb-4 md:mb-5 mt-1">
+                   <a 
+                      href="tel:01714063032" 
+                      className="inline-flex items-center gap-1.5 md:gap-2 bg-white text-gray-800 px-3 py-1 md:px-4 md:py-1.5 rounded-md font-bold shadow-sm border border-gray-200 hover:bg-gray-100 transition-colors text-[10px] md:text-sm"
+                    >
+                      <Phone size={12} className="fill-current md:w-[14px] md:h-[14px]" />
+                      ইনচার্জ: 01714-063032
+                   </a>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 md:gap-5">
+                  {maleBranches.map((branch, index) => (
+                    <BranchCard key={index} branch={branch} onImageClick={setSelectedImage} />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
         </div>
       </div>

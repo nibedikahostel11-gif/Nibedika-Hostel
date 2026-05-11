@@ -61,7 +61,7 @@ const Gallery: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'gallery'), (snapshot) => {
-      const imgs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const imgs = snapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as any) }));
       imgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
       setImages(imgs);
       setLoading(false);

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore } from 'firebase/firestore';
 import localFirebaseConfig from '../firebase-applet-config.json';
 
 // Use environment variables if available (e.g., on Netlify), otherwise fallback to local config
@@ -17,5 +17,5 @@ const firebaseConfig = {
 const databaseId = import.meta.env.VITE_FIRESTORE_DATABASE_ID || localFirebaseConfig.firestoreDatabaseId;
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, databaseId);
+export const db = initializeFirestore(app, { experimentalForceLongPolling: true }, databaseId);
 export const auth = getAuth(app);
