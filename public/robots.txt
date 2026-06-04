@@ -1,0 +1,10 @@
+# http://www.robotstxt.org/
+
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /ai.txt
+
+# Public assets are open
+Allow: /assets/
+Allow: /static/

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Phone } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -117,7 +118,7 @@ const Footer: React.FC = () => {
           <p className="text-gray-500 text-xs md:text-sm mb-1 md:mb-2 flex items-center justify-center gap-2">
             <span>© {new Date().getFullYear()} Nibedika Hostel. All rights reserved.</span>
             <span className="text-gray-700">|</span>
-            <a href="/admin" className="hover:text-teal-400 transition-colors">Admin Panel</a>
+            <Link to="/admin" className="hover:text-teal-400 transition-colors">Admin Panel</Link>
           </p>
           <p className="text-gray-600 text-[10px] md:text-xs flex items-center justify-center gap-1">
             Created by{' '}

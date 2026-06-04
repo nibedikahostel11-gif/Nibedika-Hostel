@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Menu, X, Phone } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,12 +34,12 @@ const Header: React.FC = () => {
   };
 
   const navLinks = [
-    { name: 'হোম', href: '#home' },
-    { name: 'ব্রাঞ্চসমূহ', href: '#branches' },
-    { name: 'গ্যালারি', href: '#gallery' },
-    { name: 'ভাড়া ও খরচ', href: '#pricing' },
-    { name: 'মতামত', href: '#testimonials' },
-    { name: 'যোগাযোগ', href: '#footer' },
+    { name: 'Home', href: '#home' },
+    { name: 'Branches', href: '#branches' },
+    { name: 'Gallery', href: '#gallery' },
+    { name: 'Pricing', href: '#pricing' },
+    { name: 'Reviews', href: '#testimonials' },
+    { name: 'Contact', href: '#footer' },
   ];
 
   const logoUrl = "https://drive.google.com/thumbnail?id=1uz9QaBPFZMproVL4pJyQPvquVBoYXTtX&sz=s200";
@@ -55,82 +54,75 @@ const Header: React.FC = () => {
         }`}
       >
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center h-14">
+          <div className="flex items-center h-14 gap-4">
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center">
-              <a href="#home" onClick={scrollToTop} className="flex items-center gap-2 group cursor-pointer">
+            <div className="flex-1 flex items-center justify-start min-w-0">
+              <a href="#home" onClick={scrollToTop} className="flex items-center gap-2 group cursor-pointer shrink-0">
                 <img 
                   src={logoUrl} 
                   alt="Nibedika Hostel Logo" 
                   className="w-8 h-8 object-cover rounded-full border border-gray-100"
                   referrerPolicy="no-referrer"
                 />
-                <div className="flex flex-col">
-                  <span className="font-bold text-base text-gray-800 leading-none">
+                <div className="flex flex-col hidden sm:flex">
+                  <span className="font-bold text-sm lg:text-base text-gray-800 leading-none whitespace-nowrap">
                     Nibedika <span className="text-teal-600">Hostel</span>
                   </span>
-                  <span className="text-[9px] text-gray-500 tracking-wider font-medium">Best Hostel in Dhaka</span>
+                  <span className="text-[8px] lg:text-[9px] text-gray-500 tracking-wider font-medium whitespace-nowrap">Best Hostel in Dhaka</span>
                 </div>
               </a>
             </div>
 
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-6">
-              <nav className="flex space-x-6">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      const element = document.querySelector(link.href);
-                      if (element) {
-                        const offset = 85; // Header height offset
-                        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                        const offsetPosition = elementPosition - offset;
-                        window.scrollTo({
-                          top: offsetPosition,
-                          behavior: 'smooth'
-                        });
-                      }
-                    }}
-                    className="text-gray-700 hover:text-teal-600 px-2 py-2 text-sm font-medium transition-colors cursor-pointer"
-                  >
-                    {link.name}
-                  </a>
-                ))}
-                <Link
-                  to="/admin"
-                  className="text-gray-700 hover:text-teal-600 px-2 py-2 text-sm font-medium transition-colors flex items-center gap-1"
+            {/* Desktop Center Menu */}
+            <nav className="hidden md:flex items-center justify-center flex-[2] gap-1 lg:gap-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const element = document.querySelector(link.href);
+                    if (element) {
+                      const offset = 85; // Header height offset
+                      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                      const offsetPosition = elementPosition - offset;
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      });
+                    }
+                  }}
+                  className="text-gray-700 hover:text-teal-600 px-2 py-2 text-[13px] lg:text-sm font-medium transition-colors cursor-pointer whitespace-nowrap"
                 >
-                  <ShieldCheck size={16} />
-                  Admin Panel
-                </Link>
-              </nav>
-              <a 
-                href="tel:01345200218" 
-                className="flex items-center gap-2 bg-[#FCD34D] hover:bg-yellow-500 text-gray-900 px-4 py-2 rounded-md transition-colors shadow-sm"
-              >
-                <Phone size={16} className="fill-current text-gray-900" />
-                <span className="text-xs font-extrabold uppercase tracking-wide opacity-90">HOTLINE</span>
-              </a>
-            </div>
+                  {link.name}
+                </a>
+              ))}
+            </nav>
 
-            {/* Mobile Menu Button & Hotline Icon */}
-            <div className="flex items-center gap-3 md:hidden">
+            {/* Right Actions / Mobile Toggle */}
+            <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
               <a 
                 href="tel:01345200218" 
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md transition-colors bg-[#FCD34D] text-gray-900 shadow-sm"
+                className="hidden sm:flex items-center gap-2 bg-[#FCD34D] hover:bg-yellow-500 text-gray-900 px-3 lg:px-4 py-2 rounded-md transition-colors shadow-sm whitespace-nowrap"
               >
-                <Phone size={14} className="fill-current" />
-                <span className="text-[10px] font-bold uppercase tracking-wide">HOTLINE</span>
+                <Phone size={14} className="md:size-4 fill-current text-gray-900" />
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-wide">HOTLINE</span>
               </a>
-              <button
-                onClick={() => setIsOpen(true)}
-                className="transition-colors focus:outline-none p-1 text-gray-800 hover:text-teal-600"
-              >
-                <Menu size={24} />
-              </button>
+
+              <div className="flex items-center gap-2 md:hidden">
+                <a 
+                  href="tel:01345200218" 
+                  className="flex sm:hidden items-center gap-1 px-3 py-1.5 rounded-md transition-colors bg-[#FCD34D] text-gray-900 shadow-sm"
+                >
+                  <Phone size={14} className="fill-current" />
+                </a>
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="transition-colors focus:outline-none p-1 text-gray-800 hover:text-teal-600"
+                >
+                  <Menu size={24} />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -184,14 +176,6 @@ const Header: React.FC = () => {
                   {link.name}
                 </a>
               ))}
-              <Link
-                to="/admin"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-2 text-gray-700 hover:text-teal-600 px-2 py-3 text-base font-medium transition-colors border-b border-gray-100 last:border-0"
-              >
-                <ShieldCheck size={18} />
-                Admin Panel
-              </Link>
             </div>
           </div>
         </div>

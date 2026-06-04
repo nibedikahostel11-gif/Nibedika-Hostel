@@ -212,7 +212,7 @@ const Pricing: React.FC = () => {
           </section>
 
           {/* ROOM CATEGORIES SECTION */}
-          <section>
+          <section id="room-categories">
             <div className="flex items-center gap-3 mb-4">
               <h3 className="text-2xl font-bold text-gray-900">সিট / রুম ক্যাটাগরি</h3>
               <div className="h-px bg-gray-200 flex-grow"></div>

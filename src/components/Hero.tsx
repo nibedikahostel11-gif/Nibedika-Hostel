@@ -127,8 +127,8 @@ export default function Hero() {
                 সেবা ও খাবার
               </button>
               <a
-                href="#pricing"
-                onClick={(e) => scrollToSection(e, '#pricing')}
+                href="#room-categories"
+                onClick={(e) => scrollToSection(e, '#room-categories')}
                 className="flex items-center justify-center gap-1.5 bg-[#FCD34D]/90 hover:bg-[#FCD34D] text-gray-900 px-2 py-2.5 md:px-4 md:py-3 rounded-lg font-bold transition-all shadow-lg text-[11px] sm:text-xs md:text-base cursor-pointer"
               >
                 <CreditCard size={14} className="md:w-[18px] md:h-[18px]" />
