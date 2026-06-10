@@ -7,7 +7,7 @@ export default function Hero() {
   const [modalType, setModalType] = useState<'amenities' | 'branches' | null>(null);
 
   const whatsappMessage = encodeURIComponent("আসসালামু আলাইকুম, আমি নিবেদিকা হোস্টেল সম্পর্কে বিস্তারিত জানতে চাই।");
-  const whatsappLink = `https://wa.me/8801345200218?text=${whatsappMessage}`;
+  const whatsappLink = `https://wa.me/8801750523734?text=${whatsappMessage}`;
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();

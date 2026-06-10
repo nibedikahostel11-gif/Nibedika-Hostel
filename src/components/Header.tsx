@@ -102,7 +102,7 @@ const Header: React.FC = () => {
             {/* Right Actions / Mobile Toggle */}
             <div className="flex-1 flex items-center justify-end gap-2 md:gap-4">
               <a 
-                href="tel:01345200218" 
+                href="tel:01750523734" 
                 className="hidden sm:flex items-center gap-2 bg-[#FCD34D] hover:bg-yellow-500 text-gray-900 px-3 lg:px-4 py-2 rounded-md transition-colors shadow-sm whitespace-nowrap"
               >
                 <Phone size={14} className="md:size-4 fill-current text-gray-900" />
@@ -111,7 +111,7 @@ const Header: React.FC = () => {
 
               <div className="flex items-center gap-2 md:hidden">
                 <a 
-                  href="tel:01345200218" 
+                  href="tel:01750523734" 
                   className="flex sm:hidden items-center gap-1 px-3 py-1.5 rounded-md transition-colors bg-[#FCD34D] text-gray-900 shadow-sm"
                 >
                   <Phone size={14} className="fill-current" />

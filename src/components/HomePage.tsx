@@ -118,7 +118,7 @@ const HomePage: React.FC = () => {
       <div className="fixed bottom-6 right-6 z-40 group">
         <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
         <a
-          href={`https://wa.me/8801345200218?text=${waMessage}`}
+          href={`https://wa.me/8801750523734?text=${waMessage}`}
           target="_blank"
           rel="noopener noreferrer"
           className="relative flex items-center justify-center bg-[#25D366] text-white p-3 rounded-full shadow-lg hover:bg-[#20bd5a] transition-colors duration-200"

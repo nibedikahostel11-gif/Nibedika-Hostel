@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
                
                {/* WhatsApp Button */}
                <a 
-                 href={`https://wa.me/8801345200218?text=${waMessage}`}
+                 href={`https://wa.me/8801750523734?text=${waMessage}`}
                  target="_blank"
                  rel="noopener noreferrer" 
                  className="bg-white p-2 md:p-2.5 rounded-full hover:scale-110 transition-transform duration-300"
@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-xs md:text-sm text-gray-400">হটলাইন / বুকিং</p>
-                  <a href="tel:01345200218" className="font-bold text-base md:text-lg hover:text-teal-400">01345-200218</a>
+                  <a href="tel:01750523734" className="font-bold text-base md:text-lg hover:text-teal-400">01750-523734</a>
                 </div>
               </li>
               <li className="flex items-center gap-2 md:gap-3">

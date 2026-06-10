@@ -102,7 +102,7 @@ const Pricing: React.FC = () => {
   const generateWhatsAppLink = (title: string, price?: string) => {
     let message = `আসসালামু আলাইকুম, আমি "${title}" প্যাকেজটি বুকিং দিতে চাই। বিস্তারিত জানাবেন প্লিজ?`;
     if (price) message = `আসসালামু আলাইকুম, আমি "${title}" (${price} টাকা) প্যাকেজটি বুকিং দিতে চাই। বিস্তারিত জানাবেন প্লিজ?`;
-    return `https://wa.me/8801345200218?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/8801750523734?text=${encodeURIComponent(message)}`;
   };
 
   return (

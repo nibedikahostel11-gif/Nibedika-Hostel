@@ -11,7 +11,7 @@ interface Branch {
 
 const BranchCard: React.FC<{ branch: Branch; onImageClick: (img: string) => void }> = ({ branch, onImageClick }) => {
   // WhatsApp Message for specific branch
-  const waLink = `https://wa.me/8801345200218?text=${encodeURIComponent(`আসসালামু আলাইকুম, আমি ${branch.name} -এ সিট বুকিং দিতে চাই।`)}`;
+  const waLink = `https://wa.me/8801750523734?text=${encodeURIComponent(`আসসালামু আলাইকুম, আমি ${branch.name} -এ সিট বুকিং দিতে চাই।`)}`;
 
   return (
     <div className={`bg-white rounded-md md:rounded-lg p-2 md:p-4 border shadow-sm hover:shadow transition-all flex flex-row items-center gap-2 md:gap-5 ${branch.isHeadOffice ? 'border-teal-500 relative overflow-hidden' : 'border-gray-200'}`}>
